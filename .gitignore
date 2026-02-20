@@ -1,0 +1,14 @@
+# Build output
+bin/
+obj/
+
+# VS / IDE files
+.vs/
+*.user
+*.suo
+
+# macOS
+.DS_Store
+
+# Logs / cache
+*.log
