@@ -1,69 +1,44 @@
+using System.Numerics;
 using Raylib_cs;
 
 public class Rect
 {
     private Rectangle rect;
-    public float Speed { get; private set; }
-    public int DirectionX { get; private set; }
-    public int DirectionY { get; private set; }
-    public float Hue { get; set; }
+    private float x, y;
+    private int width, height;
+    private float speed = 250.0f;
 
     public Rect(float x, float y)
     {
-        int width = Raylib.GetRandomValue(20, 100);
-        int height = Raylib.GetRandomValue(20, 100);
-        float speed = Raylib.GetRandomValue(2, 7);
-
-        rect = new Rectangle(x, y, width, height);
-
-        Speed = speed;
-        
-        DirectionX = Random.Shared.Next(0, 2);
-        DirectionY = Random.Shared.Next(0, 2);
-        if (DirectionX == 0) DirectionX = -1;
-        if (DirectionY == 0) DirectionY = -1;
-
-        Hue = Random.Shared.Next(0, 360);
+        this.x = x;
+        this.y = y;
+        width = 50;
+        height = 50;
     }
 
-    public void update()
+    public void moveLeft(float deltaTime)
     {
-        if (rect.X <= 0 || rect.X + rect.Width >= 800)
-        {
-            changeDirection('x');
-        }
-        if (rect.Y <= 0 || rect.Y + rect.Height >= 800)
-        {
-            changeDirection('y');
-        }
-
-        rect.X += Speed * DirectionX;
-        rect.Y += Speed * DirectionY;
+        this.x -= speed*deltaTime;
     }
 
-
-
-    public void changeDirection(char axis)
+    public void moveRight(float deltaTime)
     {
-        if (axis == 'x')
-        {
-            DirectionX *= -1;
-        }
-        else if (axis == 'y')
-        {
-            DirectionY *= -1;
-        }
-        Hue = (Hue + 30f) % 360f;
+        this.x += speed*deltaTime;
     }
 
-    public Color GetColor()
+    public void moveUp(float deltaTime)
     {
-        return Raylib.ColorFromHSV(Hue, 1f, 1f);
+        this.y -= speed*deltaTime;
     }
 
-    public Rectangle GetRect()
+    public void moveDown(float deltaTime)
     {
-        return rect;
+        this.y += speed*deltaTime;
     }
+
+    public float getX() { return x; }
+    public float getY() { return y; }
+    public int getHeight() { return height; }
+    public int getWidth() { return width;}
 
 }

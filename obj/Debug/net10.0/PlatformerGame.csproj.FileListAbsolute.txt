@@ -20,3 +20,4 @@
 /Users/ayushnegi/Desktop/Gaming/PlatformerGame/obj/Debug/net10.0/PlatformerGame.pdb
 /Users/ayushnegi/Desktop/Gaming/PlatformerGame/obj/Debug/net10.0/PlatformerGame.genruntimeconfig.cache
 /Users/ayushnegi/Desktop/Gaming/PlatformerGame/obj/Debug/net10.0/ref/PlatformerGame.dll
+/Users/ayushnegi/Desktop/Gaming/PlatformerGame/obj/Debug/net10.0/PlatformerGame.sourcelink.json

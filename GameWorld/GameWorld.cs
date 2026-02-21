@@ -1,38 +1,22 @@
-
-using System.Collections;
-using System.Numerics;
-using System.Reflection.Metadata.Ecma335;
 using Raylib_cs;
 public class GameWorld
 {
-    private List<Rect> rects;
+    private Rect player;
     public GameWorld()
     {
-        rects = new List<Rect>();
+        player = new Rect(Raylib.GetScreenWidth()/2, Raylib.GetScreenHeight()/2);
     }
 
-    public void update()
+    public void update(float deltaTime)
     {
-        DetectClick();
-        foreach (Rect rect in rects)
-        {
-            rect.update();
-        }
-
+        if(Raylib.IsKeyDown(KeyboardKey.Left))  player.moveLeft(deltaTime);
+        if(Raylib.IsKeyDown(KeyboardKey.Right)) player.moveRight(deltaTime);
+        if(Raylib.IsKeyDown(KeyboardKey.Up)) player.moveUp(deltaTime);
+        if(Raylib.IsKeyDown(KeyboardKey.Down)) player.moveDown(deltaTime);
     }
 
-    public List<Rect> GetRects()
+    public Rect GetRect()
     {
-        return rects;
-    }
-
-
-    public void DetectClick()
-    {
-        if (Raylib.IsMouseButtonDown(MouseButton.Left))
-        {
-            Vector2 GlobalPosition = Raylib.GetMousePosition();
-            rects.Add(new Rect(GlobalPosition.X, GlobalPosition.Y));
-        }
+        return player;
     }
 }
