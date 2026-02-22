@@ -1,19 +1,11 @@
 using Raylib_cs;
-
+using static Constants;
 public class GameScreen
 {
     public GameWorld world;
     public GameRenderer render;
     private const float targetUPS = 60f;
     private const float timePerUpdate = 1.0f / targetUPS;
-
-    private const int TILE_DEFAULT_SIZE = 32;
-    private const float SCALE = 1.5f;
-    private const int TILE_ROW = 14;
-    private const int TILE_COL = 26;
-    private const int TILE_SIZE = (int)(TILE_DEFAULT_SIZE * SCALE);
-    private const int GAME_WIDTH = TILE_SIZE * TILE_COL;
-    private const int GAME_HEIGHT = TILE_SIZE*TILE_ROW;
 
     public GameScreen()
     {

@@ -3,7 +3,7 @@ using Raylib_cs;
 public class LevelManager
 {
 
-    private int[,] levelOne;
+    private static int[,] levelOne;
     private int row, col;
     public LevelManager(int row, int col)
     {
@@ -34,5 +34,10 @@ public class LevelManager
     public void Update()
     {
 
+    }
+
+    public static int getLevel(int levelNo, int x, int y)
+    {
+        return levelOne[y, x];
     }
 }

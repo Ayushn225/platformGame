@@ -22,8 +22,8 @@ public class GameRenderer
 
     void drawPlayer(int TILE_SIZE)
     {
-        Raylib.DrawRectangle((int)player.getX(), (int)player.getY(), TILE_SIZE, TILE_SIZE, Color.DarkBlue);
-        Raylib.DrawRectangleLines((int)player.getX(), (int)player.getY(), TILE_SIZE, TILE_SIZE, Color.White);
+        Raylib.DrawRectangle((int)player.getX(), (int)player.getY(), player.getWidth(), player.getHeight(), Color.DarkBlue);
+        Raylib.DrawRectangleLines((int)player.getX(), (int)player.getY(), player.getWidth(), player.getHeight(), Color.Black);
 
     }
 }
