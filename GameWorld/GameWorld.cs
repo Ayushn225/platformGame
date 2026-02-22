@@ -10,6 +10,10 @@ public class GameWorld
     public void update(float deltaTime)
     {
         player.update(deltaTime);
+        if (Raylib.IsKeyPressed(KeyboardKey.Escape))
+        {
+            GameStates.setGameState(GameState.Paused);
+        }
     }
 
     public Rect GetRect()

@@ -3,8 +3,6 @@ public class Level
     private int[,] levelOne;
     public Level(int row, int col)
     {
-        //0->empty
-        //2->floor
         levelOne = new int[,]{
             {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
             {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},

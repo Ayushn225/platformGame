@@ -3,6 +3,7 @@ public enum GameState
     Menu,
     Playing,
     Paused,
+    Reset,
 }
 
 public static class GameStates

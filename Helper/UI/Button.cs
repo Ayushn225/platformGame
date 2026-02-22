@@ -32,19 +32,19 @@ public class Button
         if (!onButton)
         {
             Raylib.DrawRectangleLinesEx(button, 4, primary);
-            Raylib.DrawText(title, (int)(button.X + button.Width / 2 - 4 * 6), (int)(button.Y + button.Height / 2 - 20), 32, primary);
+            Raylib.DrawText(title, (int)(button.X + button.Width / 2 - title.Length * 6), (int)(button.Y + button.Height / 2 - 20), 32, primary);
         }
         else
         {
             if (isClicked)
             {
                 Raylib.DrawRectangle((int)button.X, (int)button.Y, (int)button.Width, (int)button.Height, secondary);
-                Raylib.DrawText(title, (int)(button.X + button.Width / 2 - 4 * 6), (int)(button.Y + button.Height / 2 - 20), 32, Color.White);
+                Raylib.DrawText(title, (int)(button.X + button.Width / 2 - title.Length * 6), (int)(button.Y + button.Height / 2 - 20), 32, Color.White);
             }
             else
             {
                 Raylib.DrawRectangle((int)button.X, (int)button.Y, (int)button.Width, (int)button.Height, primary);
-                Raylib.DrawText(title, (int)(button.X + button.Width / 2 - 4 * 6), (int)(button.Y + button.Height / 2 - 18), 32, Color.White);
+                Raylib.DrawText(title, (int)(button.X + button.Width / 2 - title.Length * 6), (int)(button.Y + button.Height / 2 - 18), 32, Color.White);
             }
 
         }
@@ -68,7 +68,7 @@ public class Button
             onButton = false;
         }
 
-        if (onButton && Raylib.IsMouseButtonDown(MouseButton.Left))
+        if (onButton==true)
         {
             isClicked = true;
             onClick();
@@ -81,13 +81,21 @@ public class Button
 
     public void onClick()
     {
+        if (Raylib.IsMouseButtonReleased(MouseButton.Left))
+        {
+            //placeholder for another function that will be defined elsewhere
+            onButtonAction?.Invoke();
+        }
 
-        //placeholder for another function that will be defined elsewhere
-        onButtonAction?.Invoke();
     }
 
     public float getBottomPos()
     {
         return button.Y + button.Height;
+    }
+
+    public float getBackPos()
+    {
+        return button.X + button.Width;
     }
 }

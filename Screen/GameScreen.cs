@@ -3,8 +3,10 @@ using static Constants;
 public class GameScreen
 {
     public GameWorld world;
-    public GameRenderer render;
-    public MenuScreen menuScreen;
+    private GameRenderer render;
+    private LevelManager levelManager;
+    private MenuScreen menuScreen;
+    private PausedScreenOverlay pausedScreen;
     private const float targetUPS = 60f;
     private const float timePerUpdate = 1.0f / targetUPS;
     public static bool ShouldQuit = false;
@@ -18,11 +20,12 @@ public class GameScreen
         Raylib.SetExitKey(KeyboardKey.Null);
         Raylib.SetTargetFPS(60);
 
-        LevelManager levelManager = new LevelManager(TILE_ROW, TILE_COL);
+        levelManager = new LevelManager(TILE_ROW, TILE_COL);
         world = new GameWorld();
         render = new GameRenderer(world, levelManager);
 
         menuScreen = new MenuScreen();
+        pausedScreen = new PausedScreenOverlay();
 
     }
 
@@ -43,6 +46,9 @@ public class GameScreen
                 case GameState.Paused:
                     paused();
                     break;
+                case GameState.Reset:
+                    applyReset();
+                    break;
             }
         }
 
@@ -50,9 +56,25 @@ public class GameScreen
         Raylib.CloseWindow();
     }
 
+    private void applyReset()
+    {
+        //when textures are added manually unload them as well here
+        world = new GameWorld();
+        render = new GameRenderer(world, levelManager);
+        deltaU = 0.0f;
+        GameStates.setGameState(GameState.Playing);
+    }
+
     private void paused()
     {
-        
+        pausedScreen.update();
+        Raylib.BeginDrawing();
+        Raylib.ClearBackground(Color.RayWhite);
+
+        render.Draw();
+        pausedScreen.draw();
+
+        Raylib.EndDrawing();
     }
 
     private void showMenu()
