@@ -1,5 +1,6 @@
 using System.Numerics;
 using Raylib_cs;
+using static Constants;
 public class GameRenderer
 {
 
@@ -12,7 +13,7 @@ public class GameRenderer
         levelManager = lm;
     }
 
-    public void Draw(int TILE_SIZE)
+    public void Draw()
     {
         player = myWorld.GetRect();
         Raylib.ClearBackground(Color.RayWhite);
