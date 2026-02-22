@@ -12,3 +12,9 @@ obj/
 
 # Logs / cache
 *.log
+
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+.vs/
