@@ -20,7 +20,7 @@ public class CollisionDetection
     {
         int xIndex = (int)(x / TILE_SIZE);
         int yIndex = (int)(y / TILE_SIZE);
-        if (xIndex < 0 || xIndex >= TILE_COL || yIndex < 0 || yIndex >= TILE_ROW)
+        if (xIndex < 0 || xIndex >= LEVEL_WIDTH || yIndex < 0 || yIndex >= LEVEL_HEIGHT)
         {
             return true;
         }
