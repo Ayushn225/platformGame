@@ -19,7 +19,7 @@ public static class Constants
         {new Color(20, 45, 20, 255),         2}, //grass
         {new Color(102, 104, 102, 255),     3}, //wall
         {new Color(50, 94, 50, 255),        4}, //wall and grass
-
+        {new Color(255, 0, 0, 255),         5}, //enemies
     };
 
     public static Dictionary<int, Color> IntToColorMap = new Dictionary<int, Color>()

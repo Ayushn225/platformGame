@@ -4,10 +4,12 @@ public class LevelManager
 {
 
     private static int[,] levelOne;
-    public LevelManager(int row, int col)
+    List<Enemy> enemies;
+    public LevelManager()
     {
         Level level = new Level(1);
         levelOne = level.getLevelScema();
+        enemies = level.GetEnemies();
     }
 
     public void Draw(int TILE_SIZE, int xlvlOffset)
@@ -21,10 +23,14 @@ public class LevelManager
                 int xCord = j * TILE_SIZE;
                 int yCord = i * TILE_SIZE;
                 int tileType = levelOne[i, j];
-
+                if (tileType == 0) continue;
+                if (tileType == 5)
+                {
+                    continue;
+                }
                 if (IntToColorMap.ContainsKey(tileType))
                 {
-                    Raylib.DrawRectangle(xCord- xlvlOffset, yCord, TILE_SIZE, TILE_SIZE, IntToColorMap[tileType]);
+                    Raylib.DrawRectangle(xCord - xlvlOffset, yCord, TILE_SIZE, TILE_SIZE, IntToColorMap[tileType]);
                 }
 
             }
@@ -39,5 +45,10 @@ public class LevelManager
     public static int getLevel(int levelNo, int x, int y)
     {
         return levelOne[y, x];
+    }
+
+    public List<Enemy> GetEnemies()
+    {
+        return enemies;
     }
 }

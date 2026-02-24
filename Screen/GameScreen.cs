@@ -4,7 +4,6 @@ public class GameScreen
 {
     public GameWorld world;
     private GameRenderer render;
-    private LevelManager levelManager;
     private MenuScreen menuScreen;
     private PausedScreenOverlay pausedScreen;
     private const float targetUPS = 60f;
@@ -20,9 +19,8 @@ public class GameScreen
         Raylib.SetExitKey(KeyboardKey.Null);
         Raylib.SetTargetFPS(60);
 
-        levelManager = new LevelManager(TILE_ROW, TILE_COL);
         world = new GameWorld();
-        render = new GameRenderer(world, levelManager);
+        render = new GameRenderer(world);
 
         menuScreen = new MenuScreen();
         pausedScreen = new PausedScreenOverlay();
@@ -60,7 +58,7 @@ public class GameScreen
     {
         //when textures are added manually unload them as well here
         world = new GameWorld();
-        render = new GameRenderer(world, levelManager);
+        render = new GameRenderer(world);
         deltaU = 0.0f;
         GameStates.setGameState(GameState.Playing);
     }

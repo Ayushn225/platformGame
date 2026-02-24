@@ -6,26 +6,36 @@ public class GameRenderer
 
     private GameWorld myWorld;
     private Rect player;
+    private LevelManager lm;
     int xlvlOffset;
-    private LevelManager levelManager;
-    public GameRenderer(GameWorld world, LevelManager lm)
+    public GameRenderer(GameWorld world)
     {
         myWorld = world;
-        levelManager = lm;
+        lm = myWorld.GetLevelManager();
     }
-
     public void Draw()
     {
         xlvlOffset = myWorld.getXlvlOffset();
         player = myWorld.GetRect();
         Raylib.ClearBackground(Color.RayWhite);
-        levelManager.Draw(TILE_SIZE, xlvlOffset);
-        drawPlayer(TILE_SIZE);
+        Raylib.DrawRectangleGradientV(0, 0, GAME_WIDTH, GAME_HEIGHT, Color.SkyBlue, Color.DarkBlue);
+        lm.Draw(TILE_SIZE, xlvlOffset);
+        drawEnemies();
+        drawPlayer();
     }
 
-    void drawPlayer(int TILE_SIZE)
+    void drawPlayer()
     {
-        Raylib.DrawRectangle((int)player.getX() - xlvlOffset, (int)player.getY(), player.getWidth(), player.getHeight(), Color.DarkBlue);
-        Raylib.DrawRectangleLines((int)player.getX() - xlvlOffset, (int)player.getY(), player.getWidth(), player.getHeight(), Color.Black);
+        Raylib.DrawRectangle((int)player.getX() - xlvlOffset, (int)player.getY(), player.getWidth(), player.getHeight(), Color.LightGray);
+        Raylib.DrawRectangleLines((int)player.getX() - xlvlOffset, (int)player.getY(), player.getWidth(), player.getHeight(), Color.White);
+    }
+
+    void drawEnemies()
+    {
+        List<Enemy> enemies = myWorld.GetEnemies();
+        foreach(Enemy enemy in enemies)
+        {
+            enemy.draw(Color.Red, xlvlOffset);
+        }
     }
 }
