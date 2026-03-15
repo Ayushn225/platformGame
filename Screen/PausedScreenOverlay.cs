@@ -32,7 +32,8 @@ public class PausedScreenOverlay
 
         homeButton = new Button((int)(border.X + marginX), (int)(playButton.getBottomPos() + marginY), (int)buttonSize, (int)buttonSize, "Home", Color.Red, () =>
         {
-            GameStates.setGameState(GameState.Menu);
+
+            GameStates.setGameState(GameState.ResetToMenu);
         });
 
         soundButton = new Button((int)(homeButton.getBackPos() + marginX), (int)(playButton.getBottomPos() + marginY), (int)buttonSize, (int)buttonSize, "Sound", Color.Brown, () =>

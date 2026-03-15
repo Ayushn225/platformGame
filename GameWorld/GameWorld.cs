@@ -25,12 +25,13 @@ public class GameWorld
     public void update(float deltaTime)
     {
 
-        player.update(deltaTime);
+        player.update(deltaTime, enemies);
         checkCloseToBorder();
         foreach (Enemy enemy in enemies)
         {
-            enemy.update(deltaTime);
+            if(enemy.isAlive==true) enemy.update(deltaTime, player, enemies);
         }
+
         if (Raylib.IsKeyPressed(KeyboardKey.Escape))
         {
             GameStates.setGameState(GameState.Paused);

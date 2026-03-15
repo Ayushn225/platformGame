@@ -28,4 +28,27 @@ public class CollisionDetection
         if (c == 0) return false;
         return true;
     }
+
+    private static bool isEmpty(float x, float y)
+    {
+        int xIndex = (int)(x/TILE_SIZE);
+        int yIndex = (int)(y/TILE_SIZE) + 1;
+        if (xIndex < 0 || xIndex >= LEVEL_WIDTH || yIndex < 0 || yIndex >= LEVEL_HEIGHT)
+        {
+            return true;
+        }
+        int c = LevelManager.getLevel(1, xIndex, yIndex);
+        if(c==0) return true;
+        return false;
+    }
+
+    public static bool canWalk(float x, float y)
+    {
+        //check front if solid
+        if(isSolid(x, y)) return false;
+        //check down if empty
+        if(isEmpty(x, y )) return false;
+
+        return true;
+    }
 }

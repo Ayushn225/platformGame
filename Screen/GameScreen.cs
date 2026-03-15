@@ -6,7 +6,8 @@ public class GameScreen
     private GameRenderer render;
     private MenuScreen menuScreen;
     private PausedScreenOverlay pausedScreen;
-    private const float targetUPS = 60f;
+    private GameOverOverlay gameOverScreen;
+    private const float targetUPS = 120f;
     private const float timePerUpdate = 1.0f / targetUPS;
     public static bool ShouldQuit = false;
 
@@ -17,13 +18,14 @@ public class GameScreen
     {
         Raylib.InitWindow(GAME_WIDTH, GAME_HEIGHT, "Platformer");
         Raylib.SetExitKey(KeyboardKey.Null);
-        Raylib.SetTargetFPS(60);
+        Raylib.SetTargetFPS(120);
 
         world = new GameWorld();
         render = new GameRenderer(world);
 
         menuScreen = new MenuScreen();
         pausedScreen = new PausedScreenOverlay();
+        gameOverScreen = new GameOverOverlay();
 
     }
 
@@ -36,6 +38,7 @@ public class GameScreen
             switch (GameStates.getGameState())
             {
                 case GameState.Menu:
+                    
                     showMenu();
                     break;
                 case GameState.Playing:
@@ -45,8 +48,16 @@ public class GameScreen
                     paused();
                     break;
                 case GameState.Reset:
-                    applyReset();
+                    applyReset(GameState.Playing);
                     break;
+                case GameState.ResetToMenu:
+                    applyReset(GameState.Menu);
+                    break;
+                case GameState.GameOver:
+                    applyGameOver();
+                    break;
+
+
             }
         }
 
@@ -54,13 +65,26 @@ public class GameScreen
         Raylib.CloseWindow();
     }
 
-    private void applyReset()
+    private void applyGameOver()
+    {
+        gameOverScreen.update();
+        Raylib.BeginDrawing();
+        Raylib.ClearBackground(Color.RayWhite);
+
+        render.Draw();
+        gameOverScreen.draw();
+
+        Raylib.EndDrawing();
+    }
+
+    private void applyReset(GameState newState)
     {
         //when textures are added manually unload them as well here
         world = new GameWorld();
         render = new GameRenderer(world);
         deltaU = 0.0f;
-        GameStates.setGameState(GameState.Playing);
+
+        GameStates.setGameState(newState);
     }
 
     private void paused()

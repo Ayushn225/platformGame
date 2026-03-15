@@ -4,6 +4,8 @@ public enum GameState
     Playing,
     Paused,
     Reset,
+    ResetToMenu,
+    GameOver,
 }
 
 public static class GameStates
