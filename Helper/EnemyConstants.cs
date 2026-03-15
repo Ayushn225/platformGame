@@ -3,7 +3,8 @@ public static class EnemyConstants
     public enum State {
         IDLE,
         RUNNING,
-        ATTACKING
+        ATTACKING,
+        KNOCKBACK,
     };
 
 

@@ -9,9 +9,9 @@ public class CollisionDetection
         float top = player.getY() + y;
         float bottom = player.getY() + y + player.getHeight();
         if (!isSolid(left, top))
-            if (!isSolid(right-1, top))
-                if (!isSolid(left, bottom-1))
-                    if (!isSolid(right-1, bottom-1))
+            if (!isSolid(right - 1, top))
+                if (!isSolid(left, bottom - 1))
+                    if (!isSolid(right - 1, bottom - 1))
                         return false;
         return true;
     }
@@ -31,24 +31,34 @@ public class CollisionDetection
 
     private static bool isEmpty(float x, float y)
     {
-        int xIndex = (int)(x/TILE_SIZE);
-        int yIndex = (int)(y/TILE_SIZE) + 1;
+        int xIndex = (int)(x / TILE_SIZE);
+        int yIndex = (int)(y / TILE_SIZE) + 1;
         if (xIndex < 0 || xIndex >= LEVEL_WIDTH || yIndex < 0 || yIndex >= LEVEL_HEIGHT)
         {
             return true;
         }
         int c = LevelManager.getLevel(1, xIndex, yIndex);
-        if(c==0) return true;
+        if (c == 0) return true;
         return false;
     }
 
     public static bool canWalk(float x, float y)
     {
         //check front if solid
-        if(isSolid(x, y)) return false;
+        if (isSolid(x, y)) return false;
         //check down if empty
-        if(isEmpty(x, y )) return false;
+        if (isEmpty(x, y)) return false;
 
         return true;
+    }
+
+    public static bool IsRectangleSolid(float x, float y, float w, float h)
+    {
+        if (isSolid(x, y)) return true;             // Top-Left
+        if (isSolid(x + w - 1, y)) return true;     // Top-Right
+        if (isSolid(x, y + h - 1)) return true;     // Bottom-Left
+        if (isSolid(x + w - 1, y + h - 1)) return true; // Bottom-Right
+
+        return false;
     }
 }

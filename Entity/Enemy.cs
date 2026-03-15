@@ -21,6 +21,11 @@ public class Enemy
     private float coolDownTimer = 1.5f;
     private bool coolDownRunning = false;
 
+    //falling
+    private float knockbackTimer = 0.0f;
+    private float speedY = 0;
+    private float gravity = 900.0f * Constants.SCALE;
+
     //attacking
     private float attackTimer = 0.2f;
     private float attackCoolDownTimer = 0.8f;
@@ -74,24 +79,31 @@ public class Enemy
 
     public void update(float deltaTime, Rect player, List<Enemy> enemies)
     {
-        currState = State.IDLE;
-        isAttacking = false;
         float dist = player.getX() - enemy.X;
-        if (!coolDownRunning)
+        if (currState != State.KNOCKBACK)
         {
-            if (Math.Abs(dist) <= SIGHT_DISTANCE) currState = State.RUNNING;
-            if (Math.Abs(dist) <= ATTACKING_DISTANCE) currState = State.ATTACKING;
+
+            currState = State.IDLE;
+            isAttacking = false;
+
+            if (!coolDownRunning)
+            {
+                if (Math.Abs(dist) <= SIGHT_DISTANCE) currState = State.RUNNING;
+                if (Math.Abs(dist) <= ATTACKING_DISTANCE) currState = State.ATTACKING;
+            }
+
+            if (coolDownRunning == true)
+            {
+                coolDownTimer -= deltaTime;
+                if (coolDownTimer <= 0)
+                {
+                    coolDownRunning = false;
+                    coolDownTimer = 1.0f;
+                }
+            }
+
         }
 
-        if (coolDownRunning == true)
-        {
-            coolDownTimer -= deltaTime;
-            if (coolDownTimer <= 0)
-            {
-                coolDownRunning = false;
-                coolDownTimer = 1.0f;
-            }
-        }
         switch (currState)
         {
             case State.IDLE:
@@ -101,32 +113,65 @@ public class Enemy
                 runningUpdate(deltaTime, dist, enemies);
                 break;
             case State.ATTACKING:
-                attackingUpdate(deltaTime, dist, player);
+                attackingUpdate(deltaTime, player);
+                break;
+            case State.KNOCKBACK:
+                knockBackUpdate(deltaTime);
                 break;
         }
 
 
     }
+    private void knockBackUpdate(float deltaTime)
+    {
+        knockbackTimer -= deltaTime;
 
-    private void attackingUpdate(float deltaTime, float dir, Rect player)
+        // 1. Horizontal Movement (Check all corners for wall collision)
+        float dx = direction * speedX * deltaTime;
+        if (!CollisionDetection.IsRectangleSolid(enemy.X + dx, enemy.Y, enemy.Width, enemy.Height))
+        {
+            enemy.X += dx;
+        }
+
+        // 2. Vertical Movement (Gravity & Jump)
+        speedY += gravity * deltaTime;
+        float dy = speedY * deltaTime;
+
+        if (!CollisionDetection.IsRectangleSolid(enemy.X, enemy.Y + dy, enemy.Width, enemy.Height))
+        {
+            enemy.Y += dy;
+        }
+        else
+        {
+            // If we hit the ground (moving down)
+            if (dy > 0) speedY = 0;
+            // If we hit a ceiling (moving up)
+            else if (dy < 0) speedY = 10.0f;
+        }
+
+        bool isGrounded = CollisionDetection.IsRectangleSolid(enemy.X, enemy.Y + 1, enemy.Width, enemy.Height);
+
+        if (knockbackTimer <= 0 && isGrounded)
+        {
+            currState = State.IDLE;
+            speedX = 100.0f * Constants.SCALE;
+            speedY = 0;
+        }
+    }
+    private void attackingUpdate(float deltaTime, Rect player)
     {
         attackTimer -= deltaTime;
 
-        if(attackTimer > 0) return;
-
-        if (dir > 0)
-            direction = 1;
-        else
-            direction = -1;
+        if (attackTimer > 0) return;
 
         attackBoxX = (int)(enemy.X - enemy.Width);
-        attackboxY = (int)(enemy.Y + (enemy.Height*0.2));
+        attackboxY = (int)(enemy.Y + (enemy.Height * 0.2));
 
         Rectangle attackBox = new Rectangle(attackBoxX, attackboxY, attackBoxWidth, attackBoxHeight);
 
-        if(Raylib.CheckCollisionRecs(attackBox, new Rectangle(player.getX(), player.getY(), player.getWidth(), player.getHeight())) && attackTimer<=0)
+        if (Raylib.CheckCollisionRecs(attackBox, new Rectangle(player.getX(), player.getY(), player.getWidth(), player.getHeight())) && attackTimer <= 0)
         {
-            player.getHit(AttackPower);
+            player.getHit(AttackPower, enemy.X);
             attackTimer = attackCoolDownTimer;
             isAttacking = true;
         }
@@ -150,7 +195,7 @@ public class Enemy
         {
             if (this == other) continue;
 
-            if (Raylib.CheckCollisionRecs(other.enemy, new Rectangle(newX, enemy.Y, enemy.Width, enemy.Height)))
+            if (Raylib.CheckCollisionRecs(other.enemy, new Rectangle(newX, enemy.Y, enemy.Width, enemy.Height)) && other.isAlive == true)
             {
                 coolDownRunning = true;
                 return;
@@ -186,7 +231,7 @@ public class Enemy
         {
             if (this == other) continue;
 
-            if (Raylib.CheckCollisionRecs(other.enemy, new Rectangle(newX, enemy.Y, enemy.Width, enemy.Height)))
+            if (Raylib.CheckCollisionRecs(other.enemy, new Rectangle(newX, enemy.Y, enemy.Width, enemy.Height)) && other.isAlive == true)
             {
                 direction *= -1;
                 return;
@@ -217,7 +262,7 @@ public class Enemy
 
         if (currState == State.RUNNING && (isAlive == true)) Raylib.DrawText("??", (int)(drawX), (int)(enemy.Y - 32 - 2 * HealthBarHeight), 32, Color.White);
         else if (currState == State.ATTACKING && (isAlive == true)) Raylib.DrawText("!!", (int)(drawX), (int)(enemy.Y - 32 - 2 * HealthBarHeight), 32, Color.Red);
-        else if (isAlive == false)  Raylib.DrawText("xx", (int)(drawX), (int)(enemy.Y - 32 - 2 * HealthBarHeight), 32, Color.Red);
+        else if (isAlive == false) Raylib.DrawText("xx", (int)(drawX), (int)(enemy.Y - 32 - 2 * HealthBarHeight), 32, Color.Red);
 
         drawHealthBar(drawX);
         drawAttackBox(drawX);
@@ -225,7 +270,7 @@ public class Enemy
 
     private void drawAttackBox(int drawX)
     {
-        if(isAttacking == false) return;
+        if (isAttacking == false) return;
         Raylib.DrawRectangleLinesEx(new Rectangle(drawX - enemy.Width, attackboxY, attackBoxWidth, attackBoxHeight), 4, Color.Red);
 
     }
@@ -241,8 +286,19 @@ public class Enemy
         return enemy;
     }
 
-    public void getHit(int val)
+    public void getHit(int val, float playerX)
     {
         changeHealth(-val);
+        if (!isAlive) return;
+
+        currState = State.KNOCKBACK;
+        knockbackTimer = 0.4f; // Duration of the "pop"
+        speedY = -200.0f * Constants.SCALE; // The "jump" upward
+
+        enemy.Y -= 2;
+
+        // Knockback direction: away from player
+        direction = (enemy.X > playerX) ? 1 : -1;
+        speedX = 200.0f * Constants.SCALE;
     }
 }

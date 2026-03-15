@@ -36,6 +36,9 @@ public class Rect
     private int attackPower = 10;
     private int attackBoxHeight, attackBoxWidth;
 
+    // Knockback variables
+    private float knockbackTimer = 0.0f;
+    private float knockbackForce = 500.0f;
 
     public Rect(float x, float y)
     {
@@ -83,23 +86,38 @@ public class Rect
 
     public void update(float deltaTime, List<Enemy> enemies)
     {
+        if (knockbackTimer <= 0)
+        {
+            speedX = 200.0f * SCALE;
+        }
         float moveDist = speedX * deltaTime;
         float dx = 0;
         float dy = 0;
 
-
-        // 1. Gather input
-        if (Raylib.IsKeyDown(KeyboardKey.Left) || Raylib.IsKeyDown(KeyboardKey.A)) left = true;
-        if (Raylib.IsKeyDown(KeyboardKey.Right) || Raylib.IsKeyDown(KeyboardKey.D)) right = true;
-        if (Raylib.IsKeyDown(KeyboardKey.W) || Raylib.IsKeyDown(KeyboardKey.Up))
+        if (knockbackTimer > 0)
         {
-            if (coyoteTimer > 0)
+            knockbackTimer -= deltaTime;
+            this.x += speedX * deltaTime;
+        }
+        else
+        {
+
+
+
+            // 1. Gather input
+            if (Raylib.IsKeyDown(KeyboardKey.Left) || Raylib.IsKeyDown(KeyboardKey.A)) left = true;
+            if (Raylib.IsKeyDown(KeyboardKey.Right) || Raylib.IsKeyDown(KeyboardKey.D)) right = true;
+            if (Raylib.IsKeyDown(KeyboardKey.W) || Raylib.IsKeyDown(KeyboardKey.Up))
             {
-                speedY = jumpSpeed;
-                isAir = true;
-                coyoteTimer = 0;
+                if (coyoteTimer > 0)
+                {
+                    speedY = jumpSpeed;
+                    isAir = true;
+                    coyoteTimer = 0;
+                }
             }
         }
+
         if (left)
         {
             dx -= moveDist;
@@ -175,6 +193,7 @@ public class Rect
 
         }
 
+
         //attack logic
         if (attackTimer > 0) attackTimer -= deltaTime;
 
@@ -196,7 +215,7 @@ public class Rect
         {
             if (Raylib.CheckCollisionRecs(attackBox, enemy.getEnemy()))
             {
-                enemy.getHit(attackPower);
+                enemy.getHit(attackPower, this.getX());
             }
         }
     }
@@ -238,9 +257,13 @@ public class Rect
     public int getHeight() { return height; }
     public int getWidth() { return width; }
 
-    public void getHit(int val)
+    public void getHit(int val, float enemyX)
     {
         changeHealth(-val);
+        knockbackTimer = 0.15f;
+        speedY = -600f; // Slight pop upwards
+        if (this.x < enemyX) speedX = -knockbackForce;
+        else speedX = knockbackForce;
     }
 
 }
