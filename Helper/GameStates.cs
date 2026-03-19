@@ -6,6 +6,8 @@ public enum GameState
     Reset,
     ResetToMenu,
     GameOver,
+    LevelCompleted,
+    NextLevel,
 }
 
 public static class GameStates

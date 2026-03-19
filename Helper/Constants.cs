@@ -11,24 +11,30 @@ public static class Constants
     public const int GAME_HEIGHT = TILE_SIZE * TILE_ROW;
     public static int LEVEL_WIDTH = 0;
     public static int LEVEL_HEIGHT = 0;
+    public static int CURRENT_LEVEL = 1;
+    public static int TOTAL_LEVELS = 3;
 
     public static Dictionary<Color, int> ColorToIntMap = new Dictionary<Color, int>()
     {
         {new Color(0,   0,  0, 255),        1},//solid black
         {new Color(255, 255, 255, 255),     0}, //air white
-        {new Color(20, 45, 20, 255),         2}, //grass
+        {new Color(20, 45, 20, 255),        2}, //grass
         {new Color(102, 104, 102, 255),     3}, //wall
         {new Color(50, 94, 50, 255),        4}, //wall and grass
         {new Color(255, 0, 0, 255),         5}, //enemies
+        {new Color(0, 255, 0, 255),         6}, //spawn point
+        {new Color(0, 0, 255, 255),         7}, //complete flag point
     };
 
     public static Dictionary<int, Color> IntToColorMap = new Dictionary<int, Color>()
     {
-        {1, Color.DarkGray    },//solid black
-        {0, Color.White   }, //air white
-        {2, Color.DarkGreen       }, //grass
+        {1, Color.DarkGray                  },//solid black
+        {0, Color.White                     }, //air white
+        {2, Color.DarkGreen                 }, //grass
         {3, new Color(102, 104, 102, 255)   }, //wall
         {4, new Color(50, 94, 50, 255)      }, //wall and grass
+        {6, new Color(0, 255, 0, 255)       }, // spawn point
+        {7, new Color(0, 0, 255, 255)       }, // complete flag point       
     };
 
 }

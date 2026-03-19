@@ -7,6 +7,7 @@ public class GameScreen
     private MenuScreen menuScreen;
     private PausedScreenOverlay pausedScreen;
     private GameOverOverlay gameOverScreen;
+    private LevelCompleted levelCompleted;
     private const float targetUPS = 120f;
     private const float timePerUpdate = 1.0f / targetUPS;
     public static bool ShouldQuit = false;
@@ -26,7 +27,7 @@ public class GameScreen
         menuScreen = new MenuScreen();
         pausedScreen = new PausedScreenOverlay();
         gameOverScreen = new GameOverOverlay();
-
+        levelCompleted = new LevelCompleted();
     }
 
     public void Run()
@@ -56,13 +57,30 @@ public class GameScreen
                 case GameState.GameOver:
                     applyGameOver();
                     break;
-
-
+                case GameState.LevelCompleted:
+                    applyLevelCompleted();
+                    break;
+                case GameState.NextLevel:
+                    CURRENT_LEVEL++ ;
+                    if(CURRENT_LEVEL>TOTAL_LEVELS) CURRENT_LEVEL = 1;
+                    applyReset(GameState.Playing);
+                    levelCompleted = new LevelCompleted();
+                    break;
             }
         }
 
         // 4. Close the Window
         Raylib.CloseWindow();
+    }
+
+    private void applyLevelCompleted()
+    {
+        //update level completed screen
+        levelCompleted.update();
+        //draw it
+        Raylib.BeginDrawing();
+        levelCompleted.draw();
+        Raylib.EndDrawing();
     }
 
     private void applyGameOver()

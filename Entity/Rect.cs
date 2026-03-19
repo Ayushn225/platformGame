@@ -33,19 +33,24 @@ public class Rect
     private float attackTimer = 0.0f;
     private float attackDuration = 0.15f;
     private float attackCoolDown = 0.4f;
-    private int attackPower = 10;
+    private int attackPower = 8;
     private int attackBoxHeight, attackBoxWidth;
 
     // Knockback variables
     private float knockbackTimer = 0.0f;
-    private float knockbackForce = 500.0f;
+    private float knockbackForce = 200.0f;
+    private float knockbackMaxTime = 0.4f;
 
-    public Rect(float x, float y)
+    //flag
+    private Rectangle completeFlag;
+
+    public Rect(float x, float y, Vector2 flagCords)
     {
         this.x = x;
         this.y = y;
         width = TILE_SIZE - 4;
         height = TILE_SIZE - 4;
+        completeFlag = new Rectangle(flagCords.X, flagCords.Y, TILE_SIZE, TILE_SIZE);
 
         coyoteTimer = coyoteTime;
 
@@ -98,11 +103,11 @@ public class Rect
         {
             knockbackTimer -= deltaTime;
             this.x += speedX * deltaTime;
+            //add feature to prevent from coliding with solid wall when knockback
         }
         else
         {
-
-
+            checkCompleteFlag();
 
             // 1. Gather input
             if (Raylib.IsKeyDown(KeyboardKey.Left) || Raylib.IsKeyDown(KeyboardKey.A)) left = true;
@@ -260,10 +265,19 @@ public class Rect
     public void getHit(int val, float enemyX)
     {
         changeHealth(-val);
-        knockbackTimer = 0.15f;
-        speedY = -600f; // Slight pop upwards
+        knockbackTimer = knockbackMaxTime;
+        speedY = -400f; // Slight pop upwards
         if (this.x < enemyX) speedX = -knockbackForce;
         else speedX = knockbackForce;
     }
+    private void checkCompleteFlag()
+    {
+        if(Raylib.CheckCollisionRecs(new Rectangle(x, y, width, height), completeFlag))
+        {
+            GameStates.setGameState(GameState.LevelCompleted);
+        }
+    }
 
 }
+
+

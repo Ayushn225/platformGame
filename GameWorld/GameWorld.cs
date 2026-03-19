@@ -1,3 +1,4 @@
+using System.Numerics;
 using Raylib_cs;
 using static Constants;
 public class GameWorld
@@ -9,12 +10,13 @@ public class GameWorld
     private int maxTileOffset;
     private int maxLevelOffset = 0;
     private LevelManager levelManager;
-
     private List<Enemy> enemies;
     public GameWorld()
     {
-        player = new Rect(Raylib.GetScreenWidth() / 2, Raylib.GetScreenHeight() / 2);
         levelManager = new LevelManager();
+        Vector2 spawnCords = levelManager.getSpawnPoint();
+        Vector2 flagCords = levelManager.getCompletelvlFlag();
+        player = new Rect(spawnCords.X, spawnCords.Y, flagCords);
 
         maxTileOffset = Math.Max(LEVEL_WIDTH - TILE_COL, 0);
         maxLevelOffset = (int)(maxTileOffset * TILE_SIZE);

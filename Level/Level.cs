@@ -3,11 +3,9 @@ using Raylib_cs;
 public class Level
 {
     private int[,] levelData;
-    List<Enemy> enemies;
     public Level(int level)
     {
-        Image levelImage = AssetLoader.loadMapImage("level" + level.ToString());
-        enemies = new List<Enemy>();
+        Image levelImage = AssetLoader.loadMapImage("levels/level" + level.ToString());
         int height = levelImage.Height;
         int width = levelImage.Width;
         if (height == 0 && width == 0)
@@ -28,13 +26,7 @@ public class Level
                     Color pixelColor = Raylib.GetImageColor(levelImage, j, i);
                     if (Constants.ColorToIntMap.ContainsKey(pixelColor))
                     {
-                        if (Constants.ColorToIntMap[pixelColor] == 5)
-                        {
-                            int tileSize = Constants.TILE_SIZE;
-                            levelData[i, j] = 0; 
-                            enemies.Add(new Enemy(j * tileSize, i * tileSize, tileSize, tileSize));
-                        }
-                        else levelData[i, j] = Constants.ColorToIntMap[pixelColor];
+                        levelData[i, j] = Constants.ColorToIntMap[pixelColor];
                     }
                     else
                     {
@@ -50,11 +42,6 @@ public class Level
     public int[,] getLevelScema()
     {
         return levelData;
-    }
-
-    public List<Enemy> GetEnemies()
-    {
-        return enemies;
     }
 
 }

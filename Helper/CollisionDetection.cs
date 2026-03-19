@@ -1,3 +1,5 @@
+using System.Numerics;
+using Raylib_cs;
 using static Constants;
 public class CollisionDetection
 {
@@ -24,8 +26,8 @@ public class CollisionDetection
         {
             return true;
         }
-        int c = LevelManager.getLevel(1, xIndex, yIndex);
-        if (c == 0) return false;
+        int c = LevelManager.getLevel(xIndex, yIndex);
+        if (c == 0 || c==5 || c==6 || c== 7) return false;
         return true;
     }
 
@@ -37,8 +39,8 @@ public class CollisionDetection
         {
             return true;
         }
-        int c = LevelManager.getLevel(1, xIndex, yIndex);
-        if (c == 0) return true;
+        int c = LevelManager.getLevel(xIndex, yIndex);
+        if (c == 0 || c==5 || c==6 || c==7) return true;
         return false;
     }
 
@@ -61,4 +63,5 @@ public class CollisionDetection
 
         return false;
     }
+
 }

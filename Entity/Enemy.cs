@@ -27,7 +27,7 @@ public class Enemy
     private float gravity = 900.0f * Constants.SCALE;
 
     //attacking
-    private float attackTimer = 0.2f;
+    private float attackTimer = 0.1f;
     private float attackCoolDownTimer = 0.8f;
     private int attackBoxX, attackboxY, attackBoxHeight, attackBoxWidth;
     private bool isAttacking = false;
@@ -82,14 +82,15 @@ public class Enemy
         float dist = player.getX() - enemy.X;
         if (currState != State.KNOCKBACK)
         {
-
+            float heightDiff = Math.Abs(player.getY() + player.getHeight() - ( enemy.Y + enemy.Height ));
+            bool onSameHeight = heightDiff < 5.0f;
             currState = State.IDLE;
             isAttacking = false;
 
             if (!coolDownRunning)
             {
-                if (Math.Abs(dist) <= SIGHT_DISTANCE) currState = State.RUNNING;
-                if (Math.Abs(dist) <= ATTACKING_DISTANCE) currState = State.ATTACKING;
+                if (Math.Abs(dist) <= SIGHT_DISTANCE && onSameHeight) currState = State.RUNNING;
+                if (Math.Abs(dist) <= ATTACKING_DISTANCE && onSameHeight) currState = State.ATTACKING;
             }
 
             if (coolDownRunning == true)
@@ -154,6 +155,7 @@ public class Enemy
         if (knockbackTimer <= 0 && isGrounded)
         {
             currState = State.IDLE;
+            direction = -1*direction;
             speedX = 100.0f * Constants.SCALE;
             speedY = 0;
         }
@@ -292,7 +294,7 @@ public class Enemy
         if (!isAlive) return;
 
         currState = State.KNOCKBACK;
-        knockbackTimer = 0.4f; // Duration of the "pop"
+        knockbackTimer = 0.2f; // Duration of the "pop"
         speedY = -200.0f * Constants.SCALE; // The "jump" upward
 
         enemy.Y -= 2;
